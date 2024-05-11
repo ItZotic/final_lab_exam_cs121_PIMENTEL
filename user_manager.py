@@ -3,7 +3,7 @@ import os
 class UserManager:
     def __init__(personal):
         personal.users = {} 
-          
+
     def load_users(personal):
         if not os.path.exists('data'):
             os.makedirs('data')
@@ -49,4 +49,3 @@ class UserManager:
             return True, "Login successful."
         else:
             return False, "Invalid username or password."
-pass
