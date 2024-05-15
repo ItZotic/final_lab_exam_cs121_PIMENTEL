@@ -6,14 +6,14 @@ from score import Score
 from user import User
 
 class DiceGame:
-    def __init__(self):
-        self.user_manager = UserManager()
-        self.scores = []
-        self.current_user = None
-        self.user_manager.load_users()
-        self.load_score()
+    def __init__(personal):
+        personal.user_manager = UserManager()
+        personal.scores = []
+        personal.current_user = None
+        personal.user_manager.load_users()
+        personal.load_score()
 
-    def load_score(self):
+    def load_score(personal):
         if not os.path.exists('data'):
             os.makedirs('data')
         scores_file = os.path.join('data', 'rankings.txt')
@@ -24,19 +24,19 @@ class DiceGame:
                     score = Score(username, game_id)
                     score.points = int(points)
                     score.wins = int(wins)
-                    self.scores.append(score)
+                    personal.scores.append(score)
 
-    def save_score(self):
+    def save_score(personal):
         scores_file = os.path.join('data', 'rankings.txt')
         with open(scores_file, 'w') as file:
-            for score in self.scores:
+            for score in personal.scores:
                 file.write(f"{score.username},{score.game_id},{score.points},{score.wins}\n")
 
-    def menu(self):
+    def menu(personal):
         print("Welcome to the Dice Game!")
-        if self.current_user:
-            print(f"Logged in as: {self.current_user}")
-            self.logged_in_menu()
+        if personal.current_user:
+            print(f"Logged in as: {personal.current_user}")
+            personal.logged_in_menu()
         else:
             print("1. Sign up")
             print("2. Login")
@@ -44,7 +44,7 @@ class DiceGame:
             choice = input("Enter your choice: ")
             return choice
 
-    def logged_in_menu(self):
+    def logged_in_menu(personal):
         print("\n==========================================================")
         print("               ⚀⚁⚂ WELCOME TO THE LUCKY 38 ⚃⚄⚅            ")
         print("              ッ TEST YOUR LUCK AGAINST YES MAN ッ           ")
@@ -56,15 +56,15 @@ class DiceGame:
         if choice == "":
             print("No input. Returning to the menu.")
         elif choice == "1":
-            self.play_game()
+            personal.play_game()
         elif choice == "2":
-            self.show_top_scores()
+            personal.show_top_scores()
         elif choice == "3":
-            self.logout()
+            personal.logout()
         else:
             print("Invalid choice. Please try again.")
 
-    def play_game(self):
+    def play_game(personal):
         print("\nInitializing game...")
         total_points = 0
         stages_won = 0
@@ -72,11 +72,11 @@ class DiceGame:
             print(f"\nStage {stage}:")
             user_roll = random.randint(1, 6)
             cpu_roll = random.randint(1, 6)
-            print(f"{self.current_user} rolled: {user_roll}")
+            print(f"{personal.current_user} rolled: {user_roll}")
             print(f"Yes Man rolled: {cpu_roll}")
 
             if user_roll > cpu_roll:
-                print(f"{self.current_user} wins this round!")
+                print(f"{personal.current_user} wins this round!")
                 total_points += 1
                 stages_won += 1
             elif user_roll < cpu_roll:
@@ -93,40 +93,40 @@ class DiceGame:
             print(f"Congratulations! You won {stages_won} stage(s)!")
         
         print(f"Game over. You won {stages_won} stage(s) with a total of {total_points} points.")
-        self.update_score(stages_won, total_points)
+        personal.update_score(stages_won, total_points)
 
-    def logout(self):
+    def logout(personal):
         print("\nLogging out... \nsee you again next time")
-        self.current_user = None
+        personal.current_user = None
 
-    def update_score(self, stages_won, total_points):
-        if self.current_user:
-            self.scores.append(Score(self.current_user, len(self.scores) + 1, total_points, stages_won))
-            self.save_score()
+    def update_score(personal, stages_won, total_points):
+        if personal.current_user:
+            personal.scores.append(Score(personal.current_user, len(personal.scores) + 1, total_points, stages_won))
+            personal.save_score()
         else:
             print("Log in to update scores.")
 
-    def show_top_scores(self):
+    def show_top_scores(personal):
         print("\nTop Scores:")
-        sorted_scores = sorted(self.scores, key=lambda x: (x.points, x.wins), reverse=True)
+        sorted_scores = sorted(personal.scores, key=lambda x: (x.points, x.wins), reverse=True)
         for i, score in enumerate(sorted_scores[:10], 1):
             print(f"{i}. {score.username}: Points - {score.points}, Wins - {score.wins}")
 
-    def register(self):
+    def register(personal):
         username = input("Create your username: ")
         password = input("Make a strong password: ")
-        success, message = self.user_manager.register(username, password)
+        success, message = personal.user_manager.register(username, password)
         print(message)
         if success:
             print("Nice! registration successfull.")
         else:
             print("Registration unsuccessfull, please try again.")
 
-    def login(self):
+    def login(personal):
         username = input("Enter USERNAME: ")
         password = input("Enter PASSWORD: ")
-        if self.user_manager.login(username, password):
-            self.current_user = username
-            print(f"Welcome, {self.current_user}!")
+        if personal.user_manager.login(username, password):
+            personal.current_user = username
+            print(f"Welcome, {personal.current_user}!")
         else:
             print("Login unsuccessfull, credentials missing or incorrect")

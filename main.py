@@ -15,7 +15,7 @@ def main():
         elif choice == "":
             print("No input provided. Please enter a valid choice.")
         else:
-            print("ERROR, INVALID RESPONSE")
+            print("ERROR: INVALID RESPONSE")
 
 if __name__ == "__main__":
     main()
