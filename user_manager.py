@@ -1,10 +1,11 @@
 import os
 
 class UserManager:
-    def __init__(personal):
-        personal.users = {} 
+    def __init__(self):
+        self.users = {}
+        self.load_users()
 
-    def load_users(personal):
+    def load_users(self):
         if not os.path.exists('data'):
             os.makedirs('data')
         
@@ -13,39 +14,34 @@ class UserManager:
             with open(users_file, 'r') as file:
                 for line in file:
                     username, password = line.strip().split(',')
-                    personal.users[username] = password
+                    self.users[username] = password
 
-    def save_users(personal):
+    def save_users(self):
         users_file = os.path.join('data', 'users.txt')
         with open(users_file, 'w') as file:
-            for username, password in personal.users.items():
+            for username, password in self.users.items():
                 file.write(f"{username},{password}\n")
 
-    def validate_username(personal, username):
-        if len(username) < 4:
-            return False
-        return True
+    def validate_username(self, username):
+        return len(username) >= 4
 
-    def validate_password(personal, password):
-        if len(password) < 8:
-            return False
-        return True
+    def validate_password(self, password):
+        return len(password) >= 8
 
-    def register(personal, username, password):
-        if username in personal.users:
+    def register(self, username, password):
+        if username in self.users:
             return False, "Username already exists. Please choose another one."
         
-        if not personal.validate_username(username):
+        if not self.validate_username(username):
             return False, "Username must be at least 4 characters long."
-        if not personal.validate_password(password):
+        if not self.validate_password(password):
             return False, "Password must be at least 8 characters long."
 
-        personal.users[username] = password
-        personal.save_users()
+        self.users[username] = password
+        self.save_users()
         return True, "Registration successful."
 
-    def login(personal, username, password):
-        if username in personal.users and personal.users[username] == password:
-            return True, "Login successful."
-        else:
-            return False, "Invalid username or password."
+    def login(self, username, password):
+        if username in self.users and self.users[username] == password:
+            return True
+        return False

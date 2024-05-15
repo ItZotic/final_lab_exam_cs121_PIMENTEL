@@ -8,11 +8,14 @@ def main():
             game.register()
         elif choice == "2":
             game.login()
+            while game.current_user:
+                game.logged_in_menu()
         elif choice == "3":
-            game.logout()
             break
+        elif choice == "":
+            print("No input provided. Please enter a valid choice.")
         else:
-            print("ERROR, Invalid response")
+            print("ERROR, INVALID RESPONSE")
 
 if __name__ == "__main__":
     main()

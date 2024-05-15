@@ -1,7 +1,6 @@
 class Score:
-    def __init__(personal, username, game_id):
-        personal.username = username
-        personal.game_id = game_id
-        personal.points = 0
-        personal.wins = 0
-pass
+    def __init__(self, username, game_id, points=0, wins=0):
+        self.username = username
+        self.game_id = game_id
+        self.points = points
+        self.wins = wins
